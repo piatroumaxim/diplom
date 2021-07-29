@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>microservice1</title>
+</head>
+<body>
+<p></p>
+<h2 style="text-align: center;"> >v2</h2>
+<p style="text-align: center;"><a href="/">Главная</a></p>
+<p>{% for i in value %}{% endfor %}</p>
+<table border=1 align=center>
+  <tr>
+    <th>Дата Обновления</th>
+    <th>Аббривеатура</th>
+    <th>Название</th>
+    <th>Курс</th>
+  </tr>
+{% for i in value %}
+  <tr><td>{{ i["Date"] }}</td><td> {{ i["Abbr"] }}</td><td> {{ i["Name"] }}</td><td> {{ i["Rate"] }}</td>
+{% endfor %}
+</table>
+</body>
+</html>

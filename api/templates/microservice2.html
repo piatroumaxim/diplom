@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>microservice2</title>
+</head>
+<body>
+<p></p>
+<h2 style="text-align: center;"> >v2</h2>
+<p style="text-align: center;"><a href="/">Главная</a></p>
+<p style="text-align: center;">Список логинов, совершавших покупки </p>
+<p>
+{% for i in users %}
+<table border=0 align=center>
+     <tr><td><strong>{{ i }}</strong></td><td>
+</table>
+{% endfor %}
+</p>
+<p style="text-align: center;">Введите любой для отображения подробной информации </p>
+<form method="POST" align=center>
+  Login:<br>
+  <input type="text" name="user" value="{{ request.form['select_user'] }}"></input><br>
+  <button type="submit">Submit</button>
+<p> {{ message }}</p>
+</form>
+</body>
+</html>

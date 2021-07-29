@@ -37,8 +37,7 @@ jobs:
           REP_MICR2: bcknd
           IMAGE_TAG: ${{ steps.vars.outputs.tag }}
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
+          $GITHUB_ENV
           docker build -t $ECR_REGISTRY/$REP_API:$IMAGE_TAG ./api
           docker push $ECR_REGISTRY/$REP_API:$IMAGE_TAG
           docker build -t $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG ./micr1

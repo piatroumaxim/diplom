@@ -56,6 +56,12 @@ jobs:
     
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: | 
+        ./terraform/terraform init
+        echo $IMAGE_TAG
+      
+#     - name: Terraform apply
+#       id: apply
+#       run: ./terraform/terraform apply -var="tag_version=$IMAGE_TAG" -auto-approve
     
   

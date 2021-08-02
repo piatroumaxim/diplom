@@ -1,4 +1,4 @@
-name: workflow for diplom project
+name: diplom project TMS
 on:
   release:
     types: [published]
@@ -9,6 +9,10 @@ jobs:
     name : ci
     runs-on: ubuntu-latest
     steps:
+      - name: start ci notification 
+        run: curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="${MESSAGE}" >> /dev/null
+        env:
+          MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has started"
       - name: checkout code
         uses: actions/checkout@v2
       - name: Get the version
@@ -40,6 +44,10 @@ jobs:
           docker push $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG
           docker build -t $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG ./micr2
           docker push $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG
+      - name: end ci notification 
+        run: curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="${MESSAGE}" >> /dev/null
+        env:
+          MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has finished succesfully. \n Build and push images: \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_API}}${{steps.build-image.output.IMAGE_TAG}} \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_MICR1}}${{steps.build-image.output.IMAGE_TAG}} \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_MICR2}}${{steps.build-image.output.IMAGE_TAG}} "
   deploy:
     name: CD
     runs-on: ubuntu-latest
@@ -48,6 +56,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: hashicorp/setup-terraform@v1
+    
+    - name: start cd notification 
+      run: curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="${MESSAGE}" >> /dev/null
+      env:
+        MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has started"
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -74,5 +87,9 @@ jobs:
       run: |
         cd ./terraform
         terraform apply -var="tag_version=$IMAGE_TAG" -auto-approve
-    
+      
+    - name: end cd notification 
+      run: curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="${MESSAGE}" >> /dev/null
+      env:
+        MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has finished succesfully"
   

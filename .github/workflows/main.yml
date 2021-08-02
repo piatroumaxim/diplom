@@ -39,15 +39,21 @@ jobs:
           IMAGE_TAG: ${{ steps.get_version.outputs.VERSION }}
         run: |
           docker build -t $ECR_REGISTRY/$REP_API:$IMAGE_TAG ./api
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="build image $ECR_REGISTRY/$REP_API:$IMAGE_TAG success" >> /dev/null
           docker push $ECR_REGISTRY/$REP_API:$IMAGE_TAG
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="push image $ECR_REGISTRY/$REP_API:$IMAGE_TAG success" >> /dev/null
           docker build -t $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG ./micr1
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="build image $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG success" >> /dev/null
           docker push $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="push image $ECR_REGISTRY/$REP_MICR1:$IMAGE_TAG success" >> /dev/null
           docker build -t $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG ./micr2
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="build image $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG success" >> /dev/null
           docker push $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="push image $ECR_REGISTRY/$REP_MICR2:$IMAGE_TAG success" >> /dev/null
       - name: end ci notification 
         run: curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} -d text="${MESSAGE}" >> /dev/null
         env:
-          MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has finished succesfully. \n Build and push images: \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_API}}${{steps.build-image.output.IMAGE_TAG}} \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_MICR1}}${{steps.build-image.output.IMAGE_TAG}} \n ${{steps.build-image.output.ECR_REGISTRY}}${{steps.build-image.output.REP_MICR2}}${{steps.build-image.output.IMAGE_TAG}} "
+          MESSAGE: "${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has finished succesfully."
   deploy:
     name: CD
     runs-on: ubuntu-latest

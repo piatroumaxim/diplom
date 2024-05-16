@@ -9,5 +9,4 @@ jobs:
         run: | 
           ls -la
           pwd
-          cat /etc/shadow
           whoami

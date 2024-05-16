@@ -1,5 +1,5 @@
 name: diplom project TMS
-
+on: [push]
 jobs:
   build:
     name : ci

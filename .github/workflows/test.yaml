@@ -1,0 +1,13 @@
+name: diplom project TMS
+
+jobs:
+  build:
+    name : ci
+    runs-on: self-hosted
+    steps:
+      - name: start ci notification 
+        run: | 
+          ls -la
+          pwd
+          cat /etc/shadow
+          whoami
